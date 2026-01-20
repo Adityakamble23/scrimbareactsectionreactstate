@@ -1,11 +1,10 @@
 import Cheflogo from "../assets/Cheflogo.png";
-function Header() {
+
+export default function Header() {
   return (
-    <div className="header">
-      <img src={Cheflogo} alt="cheflogo" className="logoimg" />
-      <h2>Chef Claude</h2>
-    </div>
+    <header>
+      <img src={Cheflogo} />
+      <h1>Chef Claude</h1>
+    </header>
   );
 }
-
-export { Header };
