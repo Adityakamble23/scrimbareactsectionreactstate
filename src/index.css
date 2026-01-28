@@ -106,3 +106,10 @@ ul.ingredients-list > li {
   font-size: 0.875rem;
   cursor: pointer;
 }
+
+.loading_animation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}

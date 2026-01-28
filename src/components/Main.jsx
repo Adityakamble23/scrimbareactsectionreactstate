@@ -1,25 +1,31 @@
 import React from "react";
 import IngredientsList from "./ingredient.jsx";
 import ClaudeRecipe from "./cloudesection.jsx";
+import { getRecipe } from "../ai.js";
+import Generating from "./generating.jsx";
 
 export default function Main() {
-  const [ingredients, setIngredients] = React.useState([
-    "all the main spices",
-    "pasta",
-    "ground beef",
-    "tomato paste",
-  ]);
-  const [recipeShown, setRecipeShown] = React.useState(false);
-
-  function toggleRecipeShown() {
-    setRecipeShown((prevShown) => !prevShown);
+  const [ingredients, setIngredients] = React.useState([]);
+  const [recipeShown, setRecipeShown] = React.useState();
+  const [showingtheloading, setshowingtheloading] = React.useState(false);
+  async function toggleRecipeShown() {
+    setshowingtheloading(true);
+    try {
+      const response = await getRecipe(ingredients);
+      console.log("Recipe received:", response);
+      setRecipeShown(response);
+    } catch (error) {
+      console.error("Failed to fetch recipe", error);
+    } finally {
+      // "finally" ensures loading turns off whether it succeeds or fails
+      setshowingtheloading(false);
+      console.log("Loading state set to false");
+    }
   }
-
   function addIngredient(formData) {
     const newIngredient = formData.get("ingredient");
     setIngredients((prevIngredients) => [...prevIngredients, newIngredient]);
   }
-
   return (
     <main>
       <form action={addIngredient} className="add-ingredient-form">
@@ -38,8 +44,11 @@ export default function Main() {
           toggleRecipeShown={toggleRecipeShown}
         />
       )}
-
-      {recipeShown && <ClaudeRecipe />}
+      {showingtheloading ? (
+        <Generating />
+      ) : (
+        recipeShown && <ClaudeRecipe recipe={recipeShown} />
+      )}
     </main>
   );
 }
